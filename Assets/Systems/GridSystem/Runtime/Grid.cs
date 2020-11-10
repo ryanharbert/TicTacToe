@@ -9,7 +9,7 @@ namespace GridSystem
     {
         public static Grid Instance;
 
-        public static Action<GridObject> ObjectCreated;
+        public static event Action<GridObject> ObjectCreated;
 
         #region TILES
         /// <summary>

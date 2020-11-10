@@ -32,7 +32,7 @@ namespace TicTacToe
             TileInput.HoverExit += HoverExit;
             TileInput.TileSelected += HoverExit;
 
-            activeHoverDisplay = xHoverObject;
+            activeHoverDisplay = oHoverObject;
 
             // On turn change disable current and set new active display
         }
@@ -46,7 +46,7 @@ namespace TicTacToe
 
         void HoverEnter(GridTile tile)
         {
-            //Check if grid taken return
+            if (tile.IsOccupied) return;
             
             hoverActive = true;
             activeHoverDisplay.SetActive(true);

@@ -1,38 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using GridSystem;
 using UnityEngine;
 using Grid = GridSystem.Grid;
 
 namespace TicTacToe
 {
-    [RequireComponent(typeof(HoverDisplay))]
+    [RequireComponent(typeof(HoverDisplay), typeof(GameState))]
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] private GridObject xGridObject;
         [SerializeField] private GridObject oGridObject;
 
+        private HoverDisplay hoverDisplay;
+        private GameState gameState;
+
+        private PieceSelection xSelection;
+        private PieceSelection oSelection;
+
         protected override void Awake()
         {
             base.Awake();
 
-            TileInput.TileSelected += TileSelected;
+            hoverDisplay = GetComponent<HoverDisplay>();
+            gameState = GetComponent<GameState>();
         }
 
-        private void OnDestroy()
+        public void StartGame(PieceSelection xSelection, PieceSelection oSelection)
         {
-            TileInput.TileSelected -= TileSelected;
-        }
-
-        void TileSelected(GridTile tile)
-        {
-            if(TileOccupied(tile)) return;
-
-            Grid.Instance.InstantiateGridObject(xGridObject, tile.Position);
-        }
-
-        bool TileOccupied(GridTile tile)
-        {
-            return tile.GridObjects.Count > 0;
+            this.xSelection = xSelection;
+            this.oSelection = oSelection;
         }
     }
 }

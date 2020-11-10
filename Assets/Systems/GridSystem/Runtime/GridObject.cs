@@ -9,12 +9,12 @@ namespace GridSystem
         public void OnCreate(GridTile tile)
         {
             Tile = tile;
-            tile.GridObjects.Add(this);
+            tile.gridObjects.Add(this);
         }
 
         public void OnClear()
         {
-            Tile.GridObjects.Remove(this);
+            Tile.gridObjects.Remove(this);
         }
     }
 }

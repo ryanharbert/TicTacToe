@@ -12,10 +12,11 @@ namespace GridSystem
         public List<GridTile> Neighbors => neighbors;
         [SerializeField] private List<GridTile> neighbors;
 
-        public List<GridObject> GridObjects = new List<GridObject>();
-        
-        
+        public List<GridObject> gridObjects = new List<GridObject>();
+
         public UnityEvent onGridChange;
+
+        public bool IsOccupied => gridObjects.Count > 0;
 
         /// <summary>
         /// Called when an Grid Tile is created.
