@@ -1,4 +1,5 @@
-﻿using GridSystem;
+﻿using System;
+using GridSystem;
 using UnityEngine;
 using Grid = GridSystem.Grid;
 
@@ -7,41 +8,54 @@ namespace TicTacToe
     public class HoverDisplay : MonoBehaviour
     {
         [SerializeField] private Vector3 hoverDisplayOffset = Vector3.zero;
+        [SerializeField] private Color hoverObjectColor = Color.yellow;
         
         [SerializeField] private GameObject xHoverObject;
         [SerializeField] private GameObject oHoverObject;
 
-        [SerializeField] private GameObject activeHoverDisplay;
-
+        private GameObject activeHoverDisplay;
         private bool hoverActive = false;
 
         private void Awake()
         {
-            xHoverObject = Instantiate(xHoverObject);
-            // MeshRenderer[] renderers = xHoverObject.GetComponentsInChildren<MeshRenderer>();
-            // foreach (var r in renderers)
-            // {
-            //     r.material.color = Color.yellow;
-            // }
-            xHoverObject.SetActive(false);
-            
-            oHoverObject = Instantiate(oHoverObject);
-            oHoverObject.SetActive(false);
+            xHoverObject = HoverObjectSetup(xHoverObject);
+            oHoverObject = HoverObjectSetup(oHoverObject);
+        }
 
+        GameObject HoverObjectSetup(GameObject g)
+        {
+            g = Instantiate(g);
+            g.GetComponent<ColorChanger>()?.ChangeColor(hoverObjectColor);
+            g.SetActive(false);
+            return g;
+        }
+
+        public void TurnOn(PieceType type)
+        {
             TileInput.HoverEnter += HoverEnter;
             TileInput.HoverExit += HoverExit;
             TileInput.TileSelected += HoverExit;
 
-            activeHoverDisplay = oHoverObject;
-
-            // On turn change disable current and set new active display
+            if (type == PieceType.O)
+            {
+                activeHoverDisplay = oHoverObject;
+            }
+            else if(type == PieceType.X)
+            {
+                activeHoverDisplay = xHoverObject;
+            }
         }
 
-        private void OnDestroy()
+        public void TurnOff()
         {
             TileInput.HoverEnter -= HoverEnter;
             TileInput.HoverExit -= HoverExit;
             TileInput.TileSelected -= HoverExit;
+
+            if (hoverActive)
+            {
+                HoverExit(null);
+            }
         }
 
         void HoverEnter(GridTile tile)
