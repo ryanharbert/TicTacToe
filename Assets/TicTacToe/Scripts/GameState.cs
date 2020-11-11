@@ -8,8 +8,8 @@ namespace TicTacToe
     {
         public Dictionary<Vector2Int, PieceType> State;
 
-        private GameType gameType;
-        
+        public GameType GameType { get; private set; }
+
         public GameState(List<Vector2Int> positions, GameType gameType)
         {
             State = new Dictionary<Vector2Int, PieceType>();
@@ -18,7 +18,7 @@ namespace TicTacToe
                 State.Add(position, PieceType.Empty);
             }
 
-            this.gameType = gameType;
+            GameType = gameType;
         }
 
         public GameState(Dictionary<Vector2Int, PieceType> state, GameType gameType)
@@ -29,7 +29,7 @@ namespace TicTacToe
                 State.Add(kvp.Key, kvp.Value);
             }
 
-            this.gameType = gameType;
+            this.GameType = gameType;
         }
 
         public void PiecePlaced(Vector2Int position, PieceType type)
@@ -42,14 +42,9 @@ namespace TicTacToe
             State[position] = type;
         }
 
-        public bool GameOver(out PieceType winner)
+        public bool GameOver(out OutcomeData data)
         {
-            return gameType.GameOver(State, out winner);
-        }
-
-        public int NumberEmptySquares()
-        {
-            return EmptyPositions().Count;
+            return GameType.GameOver(State, out data);
         }
 
         public List<Vector2Int> EmptyPositions()
@@ -65,6 +60,32 @@ namespace TicTacToe
 
             return tilePositions;
         }
+
+        public Vector2Int RandomEmptyPosition()
+        {
+            List<Vector2Int> tilePositions = EmptyPositions();
+
+            if (tilePositions.Count > 0)
+            {
+                int randomIndex = Random.Range(0, tilePositions.Count);
+                return tilePositions[randomIndex];
+            }
+
+            Debug.LogError("You tried to get a random empty position when all the positions were filled.");
+            return Vector2Int.zero;
+        }
         
+    }
+
+    public struct OutcomeData
+    {
+        public PieceType Winner;
+        public List<Vector2Int> WinPositions;
+        
+        public OutcomeData(PieceType winner, List<Vector2Int> winPositions = null)
+        {
+            Winner = winner;
+            WinPositions = winPositions;
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace TicTacToe
 {
     public class GameManager : Singleton<GameManager>
     {
+        public static event Action<OutcomeData> GameOver;
+        
         [SerializeField] private GridObject xGridObject;
         [SerializeField] private GridObject oGridObject;
 
@@ -59,9 +61,22 @@ namespace TicTacToe
 
             gameState.PiecePlaced(tile.Position, currentTurn);
 
-            if(gameState.GameOver(out PieceType winner))
+            if(gameState.GameOver(out OutcomeData data))
             {
-                GameOver(winner);
+                if (data.Winner == PieceType.O)
+                {
+                    print("O Wins");
+                }
+                else if(data.Winner == PieceType.X)
+                {
+                    print("X Wins");
+                }
+                else
+                {
+                    print("Draw");
+                }
+                
+                GameOver?.Invoke(data);
             }
             else
             {
@@ -86,22 +101,6 @@ namespace TicTacToe
             else
             {
                 Debug.LogError("Don't change the turn to Empty, that doesn't make sense.");
-            }
-        }
-
-        void GameOver(PieceType winner)
-        {
-            if (winner == PieceType.O)
-            {
-                print("O Wins");
-            }
-            else if(winner == PieceType.X)
-            {
-                print("X Wins");
-            }
-            else
-            {
-                print("Draw");
             }
         }
         

@@ -5,6 +5,6 @@ namespace TicTacToe
 {
     public abstract class GameType
     {
-        public abstract bool GameOver(Dictionary<Vector2Int, PieceType> state, out PieceType winner);
+        public abstract bool GameOver(Dictionary<Vector2Int, PieceType> state, out OutcomeData data);
     }
 }

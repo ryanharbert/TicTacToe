@@ -12,7 +12,7 @@ namespace TicTacToe
             PlayerPlacement player = GetComponent<PlayerPlacement>();
             RandomPlacement random = GetComponent<RandomPlacement>();
             
-            GameManager.Instance.StartGame(player, random, new BasicGame());
+            GameManager.Instance.StartGame(player, player, new BasicGame());
         }
 
         private void Update()
