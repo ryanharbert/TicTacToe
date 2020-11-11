@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GridSystem;
 using UnityEngine;
 using Grid = GridSystem.Grid;
@@ -7,11 +8,8 @@ using Random = UnityEngine.Random;
 
 namespace TicTacToe
 {
-    [RequireComponent(typeof(GameState))]
     public class GameManager : Singleton<GameManager>
     {
-        public static event Action GameRefresh;
-        
         [SerializeField] private GridObject xGridObject;
         [SerializeField] private GridObject oGridObject;
 
@@ -19,22 +17,17 @@ namespace TicTacToe
 
         private PiecePlacement xPlacement;
         private PiecePlacement oPlacement;
+        private GameType gameType;
 
         private PiecePlacement currentPlacement;
 
         private PieceType currentTurn;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            
-            gameState = GetComponent<GameState>();
-        }
-
-        public void StartGame(PiecePlacement xPlacement, PiecePlacement oPlacement)
+        public void StartGame(PiecePlacement xPlacement, PiecePlacement oPlacement, GameType gameType)
         {
             this.xPlacement = xPlacement;
             this.oPlacement = oPlacement;
+            this.gameType = gameType;
             
             CleanupGame();
 
@@ -42,19 +35,27 @@ namespace TicTacToe
             StartNextTurn();
         }
 
-        public void CleanupGame()
+        void CleanupGame()
         {
-            gameState.NewGame();
             Grid.Instance.ClearGridObjects();
             if (currentPlacement != null)
             {
                 currentPlacement.Cleanup();
             }
+            
+            gameState = new GameState(Grid.Instance.Tiles.Keys.ToList(), gameType);
         }
 
-        public void PiecePlaced(GridObject gridObject, GridTile tile)
+        public void PiecePlaced(GridTile tile)
         {
-            Grid.Instance.InstantiateGridObject(gridObject, tile.Position);
+            if (currentTurn == PieceType.X)
+            {
+                Grid.Instance.InstantiateGridObject(xGridObject, tile.Position);
+            }
+            else
+            {
+                Grid.Instance.InstantiateGridObject(oGridObject, tile.Position);
+            }
 
             gameState.PiecePlaced(tile.Position, currentTurn);
 
@@ -74,13 +75,13 @@ namespace TicTacToe
             {
                 currentTurn = PieceType.X;
                 currentPlacement = xPlacement;
-                xPlacement.StartSelection(currentTurn, xGridObject);
+                xPlacement.StartSelection(gameState, currentTurn);
             }
             else if(currentTurn == PieceType.X)
             {
                 currentTurn = PieceType.O;
                 currentPlacement = oPlacement;
-                oPlacement.StartSelection(currentTurn, oGridObject);
+                oPlacement.StartSelection(gameState, currentTurn);
             }
             else
             {
@@ -102,6 +103,16 @@ namespace TicTacToe
             {
                 print("Draw");
             }
+        }
+        
+        
+        /// <summary>
+        /// Just here to easily tinker with think time.
+        /// </summary>
+        [SerializeField] private float computerThinkTime = 0.5f;
+        private void OnValidate()
+        {
+            ComputerPlacement.ThinkTime = computerThinkTime;
         }
     }
 }

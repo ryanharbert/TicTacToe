@@ -3,13 +3,16 @@ using UnityEngine;
 
 namespace TicTacToe
 {
-    [RequireComponent(typeof(PlayerPiecePlacement))]
+    [RequireComponent(typeof(PlayerPlacement), typeof(RandomPlacement))]
     public class GameSelection : MonoBehaviour
     {
+        
         private void Start()
         {
-            PlayerPiecePlacement placement = GetComponent<PlayerPiecePlacement>();
-            GameManager.Instance.StartGame(placement, placement);
+            PlayerPlacement player = GetComponent<PlayerPlacement>();
+            RandomPlacement random = GetComponent<RandomPlacement>();
+            
+            GameManager.Instance.StartGame(player, random, new BasicGame());
         }
 
         private void Update()

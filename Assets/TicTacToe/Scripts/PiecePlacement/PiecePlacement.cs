@@ -7,13 +7,13 @@ namespace TicTacToe
 {
     public abstract class PiecePlacement : MonoBehaviour
     {
-        protected GridObject gridObject;
+        protected GameState state;
         protected PieceType currentTurn;
         
-        public void StartSelection(PieceType currentTurn, GridObject gridObject)
+        public void StartSelection(GameState state, PieceType currentTurn)
         {
+            this.state = state;
             this.currentTurn = currentTurn;
-            this.gridObject = gridObject;
             
             OnStartPlacement();
         }
@@ -42,7 +42,7 @@ namespace TicTacToe
                 return;
             }
             
-            GameManager.Instance.PiecePlaced(gridObject, tile);
+            GameManager.Instance.PiecePlaced(tile);
         }
     }
 }

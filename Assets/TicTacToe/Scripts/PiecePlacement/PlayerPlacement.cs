@@ -5,7 +5,7 @@ using Grid = UnityEngine.Grid;
 namespace TicTacToe
 {
     [RequireComponent(typeof(HoverDisplay))]
-    public class PlayerPiecePlacement : PiecePlacement
+    public class PlayerPlacement : PiecePlacement
     {
         private HoverDisplay hoverDisplay;
         
