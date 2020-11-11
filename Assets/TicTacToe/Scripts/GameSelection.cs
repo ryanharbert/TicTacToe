@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace TicTacToe
 {
-    [RequireComponent(typeof(PlayerPlacement), typeof(RandomPlacement))]
+    [RequireComponent(typeof(PlayerPlacement), typeof(RandomPlacement), typeof(UnbeatablePlacement))]
     public class GameSelection : MonoBehaviour
     {
         [SerializeField] private TMP_Dropdown xDropdown;
@@ -15,11 +15,13 @@ namespace TicTacToe
 
         private PlayerPlacement player;
         private RandomPlacement random;
+        private UnbeatablePlacement unbeatable;
         
         private void Start()
         {
             player = GetComponent<PlayerPlacement>();
             random = GetComponent<RandomPlacement>();
+            unbeatable = GetComponent<UnbeatablePlacement>();
             
             SetupDropdown(xDropdown);
             SetupDropdown(oDropdown);
@@ -40,6 +42,7 @@ namespace TicTacToe
             List<string> options = new List<string>();
             options.Add("Player");
             options.Add("Random");
+            options.Add("Unbeatable");
             dropdown.AddOptions(options);
             dropdown.value = 0;
         }
@@ -53,6 +56,10 @@ namespace TicTacToe
             else if (dropdown.value == 1)
             {
                 return random;
+            }
+            else if (dropdown.value == 2)
+            {
+                return unbeatable;
             }
 
             return player;
