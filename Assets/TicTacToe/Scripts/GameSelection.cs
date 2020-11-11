@@ -1,31 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TicTacToe
 {
     [RequireComponent(typeof(PlayerPlacement), typeof(RandomPlacement))]
     public class GameSelection : MonoBehaviour
     {
+        [SerializeField] private TMP_Dropdown xDropdown;
+        [SerializeField] private TMP_Dropdown oDropdown;
+        [SerializeField] private Button restartButton;
+
+        private PlayerPlacement player;
+        private RandomPlacement random;
         
         private void Start()
         {
-            PlayerPlacement player = GetComponent<PlayerPlacement>();
-            RandomPlacement random = GetComponent<RandomPlacement>();
+            player = GetComponent<PlayerPlacement>();
+            random = GetComponent<RandomPlacement>();
             
-            GameManager.Instance.StartGame(player, player, new BasicGame());
+            SetupDropdown(xDropdown);
+            SetupDropdown(oDropdown);
+            
+            Restart();
+            
+            restartButton.onClick.AddListener(Restart);
         }
 
-        private void Update()
+        void Restart()
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            GameManager.Instance.StartGame(GetPlacementFromDropdown(xDropdown), GetPlacementFromDropdown(oDropdown), new BasicGame());
+        }
+
+        void SetupDropdown(TMP_Dropdown dropdown)
+        {
+            dropdown.ClearOptions();
+            List<string> options = new List<string>();
+            options.Add("Player");
+            options.Add("Random");
+            dropdown.AddOptions(options);
+            dropdown.value = 0;
+        }
+
+        PiecePlacement GetPlacementFromDropdown(TMP_Dropdown dropdown)
+        {
+            if (dropdown.value == 0)
             {
-                Start();
+                return player;
             }
-        }
+            else if (dropdown.value == 1)
+            {
+                return random;
+            }
 
-        public void TeamSelection()
-        {
-            
+            return player;
         }
     }
 }
