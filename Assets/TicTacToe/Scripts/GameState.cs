@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Grid = GridSystem.Grid;
 
 namespace TicTacToe
 {

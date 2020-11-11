@@ -31,6 +31,14 @@ namespace TicTacToe
             restartButton.onClick.AddListener(Restart);
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        }
+
         void Restart()
         {
             GameManager.Instance.StartGame(GetPlacementFromDropdown(xDropdown), GetPlacementFromDropdown(oDropdown), new BasicGame());
